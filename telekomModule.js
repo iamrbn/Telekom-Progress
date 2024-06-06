@@ -1,13 +1,53 @@
 //=======================================//
 //=========== START OF MODULE ===========//
-//============= Version 0.9 =============//
+//=============== Version 1.0 ===============//
 
 
-//Calcs date from API
-module.exports.calcDate = (df, str) => {
-  //df = new DateFormatter()
-  df.dateFormat = 'HH:mm'
-  return df.string(new Date(str))
+module.exports.getFromAPI = async (fm, df, jsonPath) => {
+let data;
+	 try {
+	 	req = new Request("https://pass.telekom.de/api/service/generic/v1/status");
+	 	req.headers = {"User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Mobile/15E148 Safari/604.1"};
+	 	data = await req.loadJSON()
+	 	console.warn("\nfetch datas from API")
+	 	//console.log(JSON.stringify(data, null, 2))
+	 	fm.writeString(jsonPath, JSON.stringify(data, null, 2))
+	 	fresh = truer
+	 	sfSymbol = 'antenna.radiowaves.left.and.right'
+	 	fontColor = Color.dynamic(new Color('#ea0a8e'), new Color('#ffffff'))
+	} catch (error){
+		console.warn("\nfetch datas from iCloud")
+		fresh = false
+		sfSymbol = 'wifi.exclamationmark'
+		fontColor = Color.dynamic(new Color('#EC7CB6'), new Color('#EC7CB6'))
+		if (!fm.isFileDownloaded(jsonPath)) await fm.downloadFileFromiCloud(jsonPath)
+		data = JSON.parse(fm.readString(jsonPath), null)
+		//console.log(JSON.stringify(data, null, 2))
+		//console.warn({error})
+  }
+  
+unlimited = true
+passName = (data.passName == "Ihr Telekom Datentarif") ? "DataPlan" : data.passName
+
+if (!passName.includes('unlimited')){
+    unlimited = false
+    usedPercentage = data.usedPercentage
+    remainingTimeStr = data.remainingTimeStr
+    usedVolumeStr = data.usedVolumeStr.replace(/,\d+/, '')
+    usedVolumeNum = data.usedVolume / 1024 / 1024 / 1024
+    initialVolumeNum = Math.abs(data.initialVolume.toFixed() / 1024 / 1024 / 1024)
+    usedVolume = String(Math.round((usedVolumeNum + Number.EPSILON) * 100) / 100).replace(',', '.')
+    initialVolume = String(Math.round((initialVolumeNum + Number.EPSILON) * 100) / 100).replace(',', '.')
+    initialVolume = parseFloat(initialVolume).toFixed(2)
+    remainingVolumeNum = (data.initialVolume - data.usedVolume) / 1024 / 1024 / 1024
+    remainingVolume = String(Math.round((remainingVolumeNum + Number.EPSILON) * 100) / 100).replace(',', '.')
+    remainingVolumeMB = Math.abs((data.initialVolume - data.usedVolume) / 1024 / 1024).toFixed(2)
+    remainungVolumeGB = Math.abs((remainingVolumeMB) / 1024).toFixed(2)
+    lastUpdate = df.string(new Date(data.usedAt))
+    nextUpdate = df.string(new Date (10800*1000+data.usedAt))
+    datas = {unlimited, usedPercentage, remainingTimeStr, passName, usedVolumeStr, usedVolumeNum, initialVolumeNum, usedVolume, initialVolume, remainingVolumeNum, remainingVolume, remainingVolumeMB, remainungVolumeGB, lastUpdate, nextUpdate}
+     }
+  return {fresh, sfSymbol, fontColor, datas}
 };
 
 
@@ -47,7 +87,7 @@ module.exports.getSF = (ground, name, fontSize, color, sizeW, sizeH) => {
 };
 
 
-module.exports.createCircle = async  (value) => {
+module.exports.createCircle = async (value) => {
   if (value > 1) value /= 100
   if (value < 0) value = 0
   if (value > 1) value = 1
