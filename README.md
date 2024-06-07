@@ -3,23 +3,59 @@
 ![](https://img.shields.io/badge/dynamic/json?color=EC1181&style=plastic&label=Script%20Version&query=version&url=https%3A%2F%2Fraw.githubusercontent.com%2Fiamrbn%2FTelekom-Progress%2Fmain%2FTelekom-Progress.json "Hi there 👋 I'm always up to date")
 
 ## OVERVIEW
+Widget that displays your data plan from the telekom app on your home & lock screen.
 
-### Widget Sizes
+<img title=Thumbnail src=/Images/Thumbnail-Overview.png  width="250">
 
 
 ## FEATURES
 
+### Widget Sizes
+- Homescreen
+  - Small
+  - Medium
+- Lockscreen
+  - Inline
+  - Circular
+  - Recatngular
+
+
 ### Light- & Darkmode
+Light- & Darkmode is only available fot the homescreen widgets.
+
 
 ### Not Connected (WiFi)
+All widgets has an indicator which shows your connection.
+Internet or Cellular. This means how fresh your datas are.    
+The Wifi symbol <img title=wifi.exclamationmark src=/Images/wifi.exclamationmark.png  width="20"> means, your datas are from the last run in cellular network.    
+This Cellular symbol <img title=wifi.exclamationmark src=/Images/antenna.radiowaves.left.and.right.png  width="21"> means your datas are fresh from the API.
+
+
+### Unlimited
+If you have booked an unlimited data plan, this will also be displayed in the widget. 
+
 
 ### Progress Bar
+The Rectangular-Lockscreen and the Homescreen widget shows a prograss bar which displays your current consumption.    
+The Circular-Lockscreen widget shows it as a Circular Progress.
 
-### Small Progress Indicator
+
+### Daily Requirement Indicator
+This small indicator in the progress bar shows you your daily consumption limit. this tells you whether you have reached your daily requirement or not. 
 
 
 ### Selfupdate Function
 The script updates itself
+
+
+## Configuration
+Set your widget parameter
+``` javascript
+const refreshInt = 15
+const language = 'de'
+const widgetURL = 'https://pass.telekom.de'
+```
+
 
 
 ## ON THE FIRST RUN
@@ -30,6 +66,7 @@ iCloud Drive/
 │  ├─ Telekom Progress/
 │  │  ├─ telekomModule.js
 │  │  ├─ Telekom.png
+│  │  ├─ telekomDataPlan.json
 ```
 
 
