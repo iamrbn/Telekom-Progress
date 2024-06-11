@@ -3,10 +3,10 @@
 ![](https://img.shields.io/badge/dynamic/json?color=EC1181&style=plastic&label=Script%20Version&query=version&url=https%3A%2F%2Fraw.githubusercontent.com%2Fiamrbn%2FTelekom-Progress%2Fmain%2FTelekom-Progress.json "Hi there 👋 I'm always up to date")
 
 ## OVERVIEW
-Widget that displays your data plan from the telekom app on your home & lock screen.
+Widget that displays your data plan from the telekom app on your home & lock screen[^1]
 
-<img title=Thumbnail src=/Images/Thumbnail-Overview.png  width="250">
-
+<img title=Thumbnail Homescreen src=/Images/Thumbnail-Overview.png  width="250">
+<img title=Thumbnail Lockscreen src=/Images/lockscreenThumbnail.png  width="250">
 
 ## FEATURES
 
@@ -45,15 +45,17 @@ This small indicator in the progress bar shows you your daily consumption limit.
 
 
 ### Selfupdate Function
-The script updates itself
+The script updates itself[^2]
 
 
 ## Configuration
 Set your widget parameter
 ``` javascript
-const refreshInt = 15
-const language = 'de'
+const refreshInt = 60 //in minutes
 const widgetURL = 'https://pass.telekom.de'
+const remainingText = "Remaining for " //de: verbleibend für ; en: remaining for ;
+const usedOf = 'of X used' //de: von X verbraucht; en: of X used;
+const replacer = ['.', ','] // replaces point with coma or vice versa (e.g. 2.5 => 2,5);
 ```
 
 
@@ -86,4 +88,7 @@ iCloud Drive/
 
 <br>
 
-[^1]:[Function](https://github.com/mvan231/Scriptable#updater-mechanism-code-example "GitHub Repo") is written by the amazing [@mvan231](https://twitter.com/mvan231 "Twitter")
+[^1]:Over the years I have used many different scriptable-telekom-widgets. At some point I started to build my own and used parts from the other widgets.
+So if you find parts of your code in mine, contact me and I will add you to my credits.
+[^2]:[Ground Function](https://github.com/mvan231/Scriptable#updater-mechanism-code-example "GitHub Repo") is written by the amazing [@mvan231](https://mastodon.social/@mvan231 "Mastodon")
+
