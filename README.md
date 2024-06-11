@@ -38,8 +38,8 @@ The Rectangular-Lockscreen and the Homescreen widget shows a prograss bar which 
 The Circular-Lockscreen widget shows it as a Circular Progress.
 
 
-### Daily Requirement Indicator
-This small indicator in the progress bar shows you your daily consumption limit. this tells you whether you have reached your daily requirement or not. 
+### Requirement Indicator
+This small indicator in the progress bar shows you your consumption limit. this tells you whether you have reached your requirement or not. 
 
 
 ### Selfupdate Function
