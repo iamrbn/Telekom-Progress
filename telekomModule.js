@@ -1,18 +1,18 @@
 //=======================================//
 //=========== START OF MODULE ===========//
-//=============== Version 1.0 ===============//
+//============== Version 1.0 ============//
 
 
 module.exports.getProgressColor = (fresh, percentage) => {
-	var progressFillColor = '#EC7CB6'
+	color = '#EC7CB6'
 	if (fresh){
-      if (percentage <= 24) progressFillColor = '#23967F'//green
-      else if (percentage <= 49) progressFillColor = '#FFD60A'//yellow
-      else if (percentage <=74) progressFillColor = '#FF9F0A'//orange
-      else if (percentage >= 75) progressFillColor = '#FF453A'//red
-      else if (percentage >= 85) progressFillColor = '#BF5AF2'//purple
-    } 
-    return progressFillColor
+      if (percentage <= 49) color = '#23967F'//green
+      else if (percentage <= 59) color = '#FFD60A'//yellow
+      else if (percentage <=84) color = '#FF9F0A'//orange
+      else if (percentage >= 85) color = '#FF453A'//red
+      //else if (percentage >= 85) color = '#BF5AF2'//purple
+    }  //else color = '#EC7CB6'
+    return color
 };
 
 
@@ -29,7 +29,7 @@ module.exports.getFromAPI = async (fm, df, jsonPath) => {
 	 	sfSymbol = 'antenna.radiowaves.left.and.right'
 	 	fontColor = Color.dynamic(new Color('#ea0a8e'), new Color('#ffffff'))
 	} catch (error){
-		console.warn(error.message + "\nfetch datas from iCloud")
+		console.warn(error.message + " => fetch datas from iCloud")
 		fresh = false
 		sfSymbol = 'wifi.exclamationmark'
 		fontColor = Color.dynamic(new Color('#EC7CB6'), new Color('#EC7CB6'))
@@ -58,12 +58,12 @@ if (!passName.includes('unlimited')){
     
     lastUpdate = df.string(new Date(data.usedAt))
     nextUpdate = df.string(new Date (10800*1000+data.usedAt))
-    
+
     var datas = {
     	unlimited, passName, usedPercentage, remainingTimeStr, usedVolumeStr, initialVolumeStr, initialVolumeNum, usedVolume, initialVolume, remainingVolumeMB, remainungVolumeGB, lastUpdate, nextUpdate
     	}
      }
-     //log({datas})
+     
   return {fresh, sfSymbol, fontColor, datas}
 };
 
@@ -104,7 +104,16 @@ module.exports.getSF = (ground, name, fontSize, color, sizeW, sizeH) => {
 };
 
 
-module.exports.createCircle = async  (value, initialVolume) => {
+module.exports.getDailyUse = (initialVolume) => {
+	 day = new Date().getDate() //current day of the month
+	 currentDays = new Date(new Date().getFullYear(), new Date().getDay(), 0).getDate().toFixed(4) //number of days in the current month
+     todayStatus = (initialVolume / currentDays) * day
+
+	return todayStatus
+};
+
+
+module.exports.createCircle = async  (value, indicator) => {
   if (value > 1) value /= 100
   if (value < 0) value = 0
   if (value > 1) value = 1
@@ -112,7 +121,6 @@ module.exports.createCircle = async  (value, initialVolume) => {
   	 day = new Date().getDate()//day of the current month
      dailyUse = (initialVolume / new Date(new Date().getFullYear(), new Date().getDay(), 0).getDate()).toFixed(4)
      todayStatus = dailyUse * day
-     //pathWidth = (width * todayStatus) / initialVolume > width ? width : (width * todayStatus) / initialVolume
 
   let webView = new WebView()
   await webView.loadHTML('<canvas id="c"></canvas>')
@@ -125,7 +133,7 @@ module.exports.createCircle = async  (value, initialVolume) => {
      size = 57 * 3,
      lineWidth = 5 * 3,
      percent = ${ value * 100 },
-     indicatorValue = ${ todayStatus };
+     indicatorValue = ${ indicator };
      
      //create canvas ground
      let canvas = document.getElementById('c'),
@@ -188,10 +196,10 @@ module.exports.getImageFor = async (fm, dir, name) => {
 
 
 //Create progress bar
-module.exports.createProgress = (initialVolume, bgColor, fillColor, width, height, value, c1, c2) => {
-  	 day = new Date().getDate()//day of the current month
-     dailyUse = (initialVolume / new Date(new Date().getFullYear(), new Date().getDay(), 0).getDate()).toFixed(4)
-     todayStatus = dailyUse * day
+module.exports.createProgress = (indicator, bgColor, fillColor, width, height, value, c1, c2) => {
+  	 //day = new Date().getDate()//day of the current month
+     //dailyUse = (initialVolume / new Date(new Date().getFullYear(), new Date().getDay(), 0).getDate()).toFixed(4)
+     //todayStatus = dailyUse * day
   
   let context = new DrawContext()
       context.size = new Size(width, height)  
@@ -214,7 +222,7 @@ module.exports.createProgress = (initialVolume, bgColor, fillColor, width, heigh
       context.fillPath()
         
   let path2 = new Path()
-  let path2width = (width * todayStatus) / initialVolume > width ? width : (width * todayStatus) / initialVolume
+  let path2width = (width * indicator) / initialVolume > width ? width : (width * indicator) / initialVolume
       //console.log({path2width})
       path2.addRect(new Rect(path2width, 0, 1.5, height))
       context.addPath(path2) 
