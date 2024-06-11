@@ -1,6 +1,6 @@
 //=======================================//
 //=========== START OF MODULE ===========//
-//============== Version 1.0 ============//
+//=============== Version 1.0 ===============//
 
 
 module.exports.getProgressColor = (fresh, percentage) => {
@@ -37,7 +37,7 @@ module.exports.getFromAPI = async (fm, df, jsonPath) => {
 		data = JSON.parse(fm.readString(jsonPath), null)
 		//console.log(JSON.stringify(data, null, 2))
   }
-unlimited = true
+
 passName = (data.passName.includes(" Telekom ")) ? "DataPlan" : data.passName
 
 if (!passName.includes('unlimited')){
@@ -62,6 +62,16 @@ if (!passName.includes('unlimited')){
     var datas = {
     	unlimited, passName, usedPercentage, remainingTimeStr, usedVolumeStr, initialVolumeStr, initialVolumeNum, usedVolume, initialVolume, remainingVolumeMB, remainungVolumeGB, lastUpdate, nextUpdate
     	}
+ } else {
+     unlimited = true
+     lastUpdate = df.string(new Date(data.usedAt))
+     nextUpdate = df.string(new Date (10800*1000+data.usedAt))
+     remainingTimeStr = data.remainingTimeStr
+     remainingSeconds = data.remainingSeconds
+     usedAt = data.usedAt
+     var datas = {
+    	passName, unlimited, lastUpdate, nextUpdate, remainingTimeStr, remainingSeconds, usedAt
+    	}
      }
      
   return {fresh, sfSymbol, fontColor, datas}
@@ -70,7 +80,6 @@ if (!passName.includes('unlimited')){
 
 module.exports.remainingTime = (usedTS, sec) => {
    //target = new Date(Date.now() + sec * 1000)
-   //log(target)
 	return new Date(usedTS + sec * 1000)
 };
 
@@ -197,10 +206,6 @@ module.exports.getImageFor = async (fm, dir, name) => {
 
 //Create progress bar
 module.exports.createProgress = (indicator, bgColor, fillColor, width, height, value, c1, c2) => {
-  	 //day = new Date().getDate()//day of the current month
-     //dailyUse = (initialVolume / new Date(new Date().getFullYear(), new Date().getDay(), 0).getDate()).toFixed(4)
-     //todayStatus = dailyUse * day
-  
   let context = new DrawContext()
       context.size = new Size(width, height)  
       context.opaque = false
