@@ -5,8 +5,8 @@
 ## OVERVIEW
 Widget that displays your data plan from the telekom app on your home & lock screen[^1]
 
-<img title=Thumbnail Homescreen src=/Images/Thumbnail-Overview.png  width="250">
-<img title=Thumbnail Lockscreen src=/Images/lockscreenThumbnail.png  width="500">
+<img title=Thumbnail Homescreen src=/Images/widgetsThumbnail.png  width="1000">    
+<img title=Thumbnail Lockscreen src=/Images/lockscreenThumbnail.png  width="1000">
 
 ## FEATURES
 
