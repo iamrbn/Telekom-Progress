@@ -1,10 +1,8 @@
-# <img src=https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/61/2c/01/612c0188-2033-1815-0ee9-52c8641184a5/AppIcon-0-0-1x_U007emarketing-0-7-0-85-220.png/512x512bb.png  width="25"> Telekom Progress Widget
+# <img src=https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/61/2c/01/612c0188-2033-1815-0ee9-52c8641184a5/AppIcon-0-0-1x_U007emarketing-0-7-0-85-220.png/512x512bb.png  width="25"> Telekom Progress Widget 
+![](https://img.shields.io/badge/dynamic/json?color=EC1181&style=plastic&label=Version&query=version&url=https%3A%2F%2Fraw.githubusercontent.com%2Fiamrbn%2FTelekom-Progress%2Fmain%2FTelekom-Progress.json "Hi there 👋 I'm always up to date")
 
-![](https://img.shields.io/badge/dynamic/json?color=EC1181&style=plastic&label=Script%20Version&query=version&url=https%3A%2F%2Fraw.githubusercontent.com%2Fiamrbn%2FTelekom-Progress%2Fmain%2FTelekom-Progress.json "Hi there 👋 I'm always up to date")
-
-## OVERVIEW
 Widget that displays your data plan from the telekom app on your home & lock screen[^1]
-
+## OVERVIEW
 <img title=Thumbnail Homescreen src=/Images/widgetsThumbnail.png  width="1000">    
 <img title=Thumbnail Lockscreen src=/Images/lockscreenThumbnail.png  width="1000">
 
