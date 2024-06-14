@@ -1,7 +1,7 @@
 # <img src=https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/61/2c/01/612c0188-2033-1815-0ee9-52c8641184a5/AppIcon-0-0-1x_U007emarketing-0-7-0-85-220.png/512x512bb.png  width="25"> Telekom Progress Widget 
 ![](https://img.shields.io/badge/dynamic/json?color=EC1181&style=plastic&label=Version&query=version&url=https%3A%2F%2Fraw.githubusercontent.com%2Fiamrbn%2FTelekom-Progress%2Fmain%2FTelekom-Progress.json "Hi there 👋 I'm always up to date")
 
-Widget that displays your data plan from the telekom app on your home & lock screen[^1]
+[Scriptable](https://scriptable.app) Widget that displays your data plan from the telekom app on your home & lock screen[^1]
 ## OVERVIEW
 <img title=Thumbnail Homescreen src=/Images/widgetsThumbnail.png  width="1000">    
 <img title=Thumbnail Lockscreen src=/Images/lockscreenThumbnail.png  width="1000">
@@ -23,23 +23,33 @@ Light- & Darkmode is only available fot the homescreen widgets.
 
 
 ### Not Connected (WiFi)
-All widgets has an indicator which shows your connection.
+All widgets have an indicator that shows your connection that was present during the last run.
 Internet or Cellular. This means how fresh your datas are.    
 The Wifi symbol <img title=wifi.exclamationmark src=/Images/wifi.exclamationmark.png  width="20"> means, your datas are from the last run in cellular network.    
-This Cellular symbol <img title=wifi.exclamationmark src=/Images/antenna.radiowaves.left.and.right.png  width="21"> means your datas are fresh from the API.
+This Cellular symbol <img title=wifi.exclamationmark src=/Images/antenna.radiowaves.left.and.right.png  width="21"> means your datas are fresh and live from the API.     
+Its also reduces the widget opacity if you connected via WiFi.
 
 
 ### Unlimited
-If you have booked an unlimited data plan, this will also be displayed in the widget. 
+If you have booked an 24h unlimited dataplan, this will also be displayed in the widget.   
+A timer is also displayed showing your remaining time.
 
 
 ### Progress Bar
 The Rectangular-Lockscreen and the Homescreen widget shows a prograss bar which displays your current consumption.    
-The Circular-Lockscreen widget shows it as a Circular Progress.
+The Circular-Lockscreen widget shows it as a Circular Progress.     
+On the left it shows your used Datavolume and on the rigt it shows what is remaining.
 
 
 ### Requirement Indicator
 This small indicator in the progress bar shows you your consumption limit. this tells you whether you have reached your requirement or not. 
+
+
+### Update Footer
+The widget footer shows three timestamps.    
+_1st_: Last update in the API    
+_2nd_: Last run of the widget with Wifi or Cellular    
+_3th_: Next Update in the API
 
 
 ### Selfupdate Function
@@ -57,7 +67,6 @@ const replacer = ['.', ','] // replaces point with coma or vice versa (e.g. 2.5 
 ```
 
 
-
 ## ON THE FIRST RUN
 It downloads following files from the github repo and saves it in the "Telekom Progress" directory.
 ```
@@ -69,6 +78,33 @@ iCloud Drive/
 │  │  ├─ telekomDataPlan.json
 ```
 
+
+### Example Content Of The API
+``` JSON
+{
+  "passName": "Your Telekom data plan",
+  "usedVolumeStr": "3.95 GB",
+  "hasOffers": true,
+  "remainingSeconds": 1426444,
+  "remainingTimeStr": "16 days 12 hours",
+  "usedAt": 1718358344000,
+  "validityPeriod": 2,
+  "usedPercentage": 40,
+  "title": "",
+  "initialVolume": 10737418240,
+  "initialVolumeStr": "10 GB",
+  "passType": 103,
+  "nextUpdate": 10800,
+  "subscriptions": [
+    "speedon",
+    "roamLikeHome",
+    "tns"
+  ],
+  "usedVolume": 4241800089,
+  "passStage": 1,
+  "sessionState": 0
+}
+```
 
 ---
 
