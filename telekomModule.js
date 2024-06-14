@@ -100,8 +100,8 @@ module.exports.saveImages = async (fm, dir) => {
       }
      };
 
-module.exports.getSF = (ground, name, fontSize, color, sizeW, sizeH) => {
 
+module.exports.getSF = (ground, name, fontSize, color, sizeW, sizeH) => {
 	sf = SFSymbol.named(name)
 	sf.applyFont(new Font("Menlo-Regular", fontSize))
 	sf.applySemiboldWeight()
@@ -113,24 +113,23 @@ module.exports.getSF = (ground, name, fontSize, color, sizeW, sizeH) => {
 };
 
 
+/*
 module.exports.getDailyUse = (initialVolume) => {
-	 day = new Date().getDate() //current day of the month
-	 currentDays = new Date(new Date().getFullYear(), new Date().getDay(), 0).getDate().toFixed(4) //number of days in the current month
-     todayStatus = (initialVolume / currentDays) * day
-
-	return todayStatus
+	 today = new Date().getDate() //current day of the month
+	 days = new Date(new Date().getFullYear(), new Date().getDay()+1, 0).getDate() //number of days in the current month
+     ind = (initialVolume / days) * today
+     log({today, days, ind})
+     
+	return ind
 };
+*/
 
 
-module.exports.createCircle = async  (value, indicator) => {
-  if (value > 1) value /= 100
-  if (value < 0) value = 0
-  if (value > 1) value = 1
+module.exports.createCircle = async  (percent, volume) => {
+  today = new Date().getDate() //current day of the month
+  days = new Date(new Date().getFullYear(), new Date().getDay(), 0).getDate()
+  initialVolume =  Math.round(((volume / days) * today ) * 100 ) / 100
   
-  	 day = new Date().getDate()//day of the current month
-     dailyUse = (initialVolume / new Date(new Date().getFullYear(), new Date().getDay(), 0).getDate()).toFixed(4)
-     todayStatus = dailyUse * day
-
   let webView = new WebView()
   await webView.loadHTML('<canvas id="c"></canvas>')
 
@@ -138,12 +137,10 @@ module.exports.createCircle = async  (value, indicator) => {
     `
      //set variables
      let colour = "#FFFFFF",
-     background = "#000000",
+     background = "#00000080",
      size = 57 * 3,
-     lineWidth = 5 * 3,
-     percent = ${ value * 100 },
-     indicatorValue = ${ indicator };
-     
+     lineWidth = 5 * 3.5;
+
      //create canvas ground
      let canvas = document.getElementById('c'),
      c = canvas.getContext('2d');
@@ -151,44 +148,64 @@ module.exports.createCircle = async  (value, indicator) => {
 	 canvas.height = size;
      posX = canvas.width / 2,
 	 posY = canvas.height / 2,
-     onePercent = 360 / 100,
-     result = onePercent * ${ value * 100 };
+     result = ( 360 / 100 ) * ${ percent };
+     resultInd = ( 360 / ${ volume } ) * ${ initialVolume };
+     IndicatorColor = (resultInd >= result) ? 'white' : 'black';
 	 c.lineCap = 'round';
-	 
+
 	 //draw background circle
 	 c.beginPath();
-	 c.arc( posX, posY, ( size - lineWidth - 1 ) / 2, ( Math.PI / 180 ) * 270, ( Math.PI / 180 ) * ( 270 + 360 ) );
+	 c.arc( posX, posY,
+	    (size - lineWidth - 1) / 2,
+	    ( Math.PI / 180 ) * 270,
+	    ( Math.PI / 180 ) * ( 270 + 360 )
+	 );
 	 c.strokeStyle = background;
 	 c.lineWidth = lineWidth;
 	 c.stroke();
-	 
-	 //draw the progress bar
+
+	 //draw progress bar
 	 c.beginPath();
 	 c.strokeStyle = colour;
-	 c.lineWidth = lineWidth;
-	 c.arc( posX, posY, ( size - lineWidth - 1 ) / 2, ( Math.PI / 180 ) * 270, ( Math.PI / 180 ) * ( 270 + result ) );
+	 c.lineWidth = lineWidth-3;
+	 c.arc( posX, posY,
+	    (size - lineWidth - 1) / 2,
+	    ( Math.PI / 180 ) * 270,
+	    ( Math.PI / 180 ) * ( 270 + result )
+	 );
 	 c.stroke();
 	 
-	 //calc position of status indicator
-	 indicatorAngle = ( 270 + 360 * indicatorValue ) * ( Math.PI / 100 );
-	 indicatorLength = ( size - lineWidth - 1 ) / 2;
-	 lineOffset = 5; //length of progress indicator
 	 
-	 //draw status indicator
+	 //draw circled indicator
 	 c.beginPath();
-	 c.strokeStyle = 'green';
-	 c.lineWidth = 7;
+	 c.strokeStyle = IndicatorColor;
+	 c.lineWidth = 13; //width of indicator
+	 c.arc( posX, posY,
+	    (size - lineWidth - 1) / 2,
+	    ( Math.PI / 180 ) * resultInd,
+	    ( Math.PI / 180 ) * (resultInd + 1)
+	 );
+	 //c.stroke();// <= comment this line out for the stroked indicator!
+	 
+	 
+	 //draw stroke indicator
+	 let indicatorAngle = ( Math.PI / 180 ) * ( 270 + resultInd );
+	 let indicatorLength = ( size - lineWidth - 1 ) / 2
+	
+	 c.beginPath();
+	 c.strokeStyle = IndicatorColor;
+	 c.lineWidth = 5;  //width of indicator
 	 c.moveTo(
-	 	posX + Math.cos( indicatorAngle ) * ( indicatorLength - lineOffset ),
-	 	posY + Math.sin( indicatorAngle ) * ( indicatorLength - lineOffset )
+	    posX + Math.cos( indicatorAngle ) * ( indicatorLength - 6 ),
+	    posY + Math.sin( indicatorAngle ) * ( indicatorLength - 6 )
 	 );
 	 c.lineTo(
-     	posX + Math.cos( indicatorAngle ) * ( indicatorLength + lineOffset ),
-     	posY + Math.sin( indicatorAngle ) * ( indicatorLength + lineOffset )
+	    posX + Math.cos( indicatorAngle ) * ( indicatorLength + 6 ),
+	    posY + Math.sin( indicatorAngle ) * ( indicatorLength + 6 )
 	 );
-	 c.stroke();
+	 c.stroke();// <= comment this line out for the rounded indicator!
 	 
-    completion(canvas.toDataURL().replace("data:image/png;base64,",""))`,
+	 completion(canvas.toDataURL().replace("data:image/png;base64,",""))`,
     true
   );
   
@@ -205,34 +222,43 @@ module.exports.getImageFor = async (fm, dir, name) => {
 
 
 //Create progress bar
-module.exports.createProgress = (indicator, bgColor, fillColor, width, height, value, c1, c2) => {
+module.exports.createProgress = (type, volume, bgColor, fillColor, width, height, value, c1, c2) => {
+  today = new Date().getDate() //current day of the month
+  days = new Date(new Date().getFullYear(), new Date().getDay(), 0).getDate()//Number of days in the current month
+  indicator = (volume / days) * today
+
+  //create context
   let context = new DrawContext()
-      context.size = new Size(width, height)  
-      context.opaque = false
-      context.respectScreenScale = true
-      context.setFillColor(bgColor)
+       context.size = new Size(width, height)  
+       context.opaque = false
+       context.respectScreenScale = true
+       context.setFillColor(bgColor)
   
+  //create background
   let path = new Path()
-      path.addRoundedRect(new Rect(0, 0, width, height), c1, c2)
-      context.addPath(path)
-      context.fillPath()
-      context.setFillColor(new Color(fillColor))
+       path.addRoundedRect(new Rect(0, 0, width, height), c1, c2)
+       context.addPath(path)
+       context.fillPath()
+       context.setFillColor(new Color(fillColor))
   
+  //create bar
   let path1 = new Path()
   let path1width = (width * value) / initialVolume > width ? width : (width * value) / initialVolume
-      //console.log({path1width})
-      path1.addRoundedRect(new Rect(0, 0, path1width, height), c1, c2)
-      context.setTextAlignedCenter()
-      context.addPath(path1)  
-      context.fillPath()
-        
+       path1.addRoundedRect(new Rect(0, 0, path1width, height), c1, c2)
+       context.setTextAlignedCenter()
+       context.addPath(path1)
+       context.fillPath()
+  
+  //create indicator
   let path2 = new Path()
   let path2width = (width * indicator) / initialVolume > width ? width : (width * indicator) / initialVolume
-      //console.log({path2width})
-      path2.addRect(new Rect(path2width, 0, 1.5, height))
-      context.addPath(path2) 
-      context.setFillColor(Color.white()) 
-      context.fillPath()
+       //x = path2width - 25
+       path2.addRect(new Rect(path2width, 0, 1.5, height))
+       context.addPath(path2)
+       if (type == 10.00 && path2width < path1width) color = Color.black()
+       else color = Color.white()
+       context.setFillColor(color)
+       context.fillPath()
 
 return context.getImage()
 };
