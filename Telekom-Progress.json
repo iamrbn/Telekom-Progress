@@ -1,4 +1,4 @@
 {
-  "version": "1.1",
+  "version": 1.1,
   "notes":"• Fixed bug where the EM special unlimited plan creates an error\n• The precision of the volume indicator in the progress bar has been updated. It is now calculated in hours and not just days"
 }
