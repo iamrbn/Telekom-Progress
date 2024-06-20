@@ -230,8 +230,6 @@ module.exports.createProgress = (type, volume, bgColor, fillColor, width, height
   hoursMonth = daysMonth * 24
   hours = Math.abs( today * 24 ) - (24 - new Date().getHours())
   indicator = Math.round(((volume / hoursMonth) * hours) * 100) / 100
-  
-  log({today, daysMonth, hoursMonth, hours, indicator})
 
   //create context
   let context = new DrawContext()
