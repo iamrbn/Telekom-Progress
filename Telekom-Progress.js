@@ -210,9 +210,9 @@ async function createMediumLSWUnlimited(data){
       w.refreshAfterDate = new Date(Date.now()+1000*60*refreshInt)
      
    if (uCheck.needUpdate){
-      ud = w.addText(`Update ${uCheck.version} Available!`)
+      ud = w.addText(`Update ${uCheck.uC.version} Available!`)
       ud.font = Font.mediumMonospacedSystemFont(11)
-      ud.textColor = Color.red()
+      ud.textColor = Color.green()
 }
       
   let bgStack = w.addStack()
@@ -271,9 +271,9 @@ async function createWidget(data){
 
   //let uCheck = await updateCheck(scriptVersion)
   if (uCheck.needUpdate){
-      udd = w.addText(`Update ${uCheck.version} Available!`)
+      udd = w.addText(`Update ${uCheck.uC.version} Available!`)
       udd.font = Font.mediumMonospacedSystemFont(11)
-      udd.textColor = Color.red()
+      udd.textColor = Color.green()
       }
 
       w.addSpacer(5);
@@ -388,9 +388,9 @@ async function dayUnlimited(data){
       headerStack.addSpacer()
       
    if (uCheck.needUpdate){
-      udd = w.addText(`Update ${uCheck.version} Available!`)
+      udd = w.addText(`Update ${uCheck.uC.version} Available!`)
       udd.font = Font.mediumMonospacedSystemFont(11)
-      udd.textColor = Color.red()
+      udd.textColor = Color.green()
       }
 
       w.addSpacer()
