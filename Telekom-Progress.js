@@ -25,14 +25,11 @@ if (!fm.fileExists(dir)) fm.createDirectory(dir)
 await module.saveImages(fm, dir)
 let modulePath = fm.joinPath(dir, "telekomModule.js")
 if (!fm.fileExists(modulePath)) await loadModule()
-
 let jsonPath = fm.joinPath(dir, "telekomDataPlan.json")
 if (!fm.fileExists(jsonPath)){w = await createIssueWidget('Can`t find datas from telekom api', 'Looks like your first run', 'turn WiFi off and run script inApp', 'bolt.trianglebadge.exclamationmark.fill'); w.presentSmall(); Script.setWidget(w)}
-
 let df = new DateFormatter()
     df.dateFormat = "HH:mm"
-
-let uCheck = await module.updateCheck(fm, modulePath, 1.0)
+let uCheck = await module.updateCheck(fm, modulePath, 1.1)
 let apiDatas = await module.getFromAPI(fm, df, jsonPath)
 let data = apiDatas.datas
 let unlimited = apiDatas.datas.unlimited
@@ -66,11 +63,14 @@ if (config.runsInWidget || config.runsInAccessoryWidget){
         if (unlimited) w = await createInlineLSWUnlimited(data)
         else w = await createInlineLSW(data)
       break;
-      
-      default: if (unlimited) w = await dayUnlimited(data)
-               else w = await createWidget(data)
+      default: w = await createWidget(data)
     }
-   Script.setWidget(w)
+    Script.setWidget(w)
+   } else {
+    if (unlimited) w = await dayUnlimited(data)
+    else w = await createWidget(data)
+       w.presentSmall()
+       //w = await createIssueWidget('Can`t find datas from telekom api', 'Looks like your first run', 'turn WiFi off and run script inApp', 'bolt.trianglebadge.exclamationmark.fill')         
 };
 
 // ******** CREATE INLINE LS WIDGET ********
@@ -206,6 +206,7 @@ async function createMediumLSW(data){
 async function createMediumLSWUnlimited(data){
   let w = new ListWidget()
       w.url = widgetURL
+      //w.addAccessoryWidgetBackground = true
       w.refreshAfterDate = new Date(Date.now()+1000*60*refreshInt)
      
    if (uCheck.needUpdate){
@@ -226,6 +227,8 @@ async function createMediumLSWUnlimited(data){
       bgStack.spacing = -10
   
   let img = module.getSF(bgStack, 'infinity', 100, fontColor, 30, 30)
+      
+      //bgStack.addSpacer()
       
   let wTimer = bgStack.addDate(module.remainingTime(data.usedAt, data.remainingSeconds))
       wTimer.applyTimerStyle()
@@ -376,7 +379,7 @@ async function dayUnlimited(data){
     
       headerStack.addSpacer(4)
    
-  let wTitle = headerStack.addText(data.passName.toUpperCase())
+  let wTitle = headerStack.addText(data.passName)
       wTitle.font = new Font('Menlo', 15)
       wTitle.minimumScaleFactor = 0.7
       wTitle.lineLimit = 1
@@ -400,6 +403,8 @@ async function dayUnlimited(data){
       txtStr.font = font = new Font('Menlo', 10)
       txtStr.textColor = fontColor
       txtStr.centerAlignText()
+      
+  let timerStack = w.addStack()
       
   let wTimer = w.addDate(module.remainingTime(data.usedAt, data.remainingSeconds))
       wTimer.applyTimerStyle()
@@ -468,6 +473,7 @@ async function createIssueWidget(title, subtitle, body, sf){
  
   return w 
 };
+
 
 async function loadModule(){
    req = new Request('https://raw.githubusercontent.com/iamrbn/Telekom-Progress/main/telekomModule.js')
