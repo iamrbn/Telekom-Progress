@@ -1,6 +1,6 @@
 //=======================================//
 //=========== START OF MODULE ===========//
-//=============== Version 1.0 ===============//
+//============= Version 1.1 =============//
 
 
 module.exports.getProgressColor = (fresh, percentage) => {
@@ -40,11 +40,11 @@ module.exports.getFromAPI = async (fm, df, jsonPath) => {
 
 passName = (data.passName.includes(" Telekom ")) ? "DataPlan" : data.passName
 
-if (!passName.includes('unlimited')){
+if (!passName.toLowerCase().includes('unlimited')){
     unlimited = false
     usedPercentage = data.usedPercentage
     remainingTimeStr = data.remainingTimeStr
-    usedVolumeStr = data.usedVolumeStr//.replace(/,\d+/, '')
+    usedVolumeStr = data.usedVolumeStr //.replace(/,\d+/, '')
     //usedVolumeNum = data.usedVolume / 1024 / 1024 / 1024
     initialVolumeStr = data.initialVolumeStr
     initialVolumeNum = Math.abs(data.initialVolume.toFixed() / 1024 / 1024 / 1024)
@@ -127,8 +127,10 @@ module.exports.getDailyUse = (initialVolume) => {
 
 module.exports.createCircle = async  (percent, volume) => {
   today = new Date().getDate() //current day of the month
-  days = new Date(new Date().getFullYear(), new Date().getDay(), 0).getDate()
-  initialVolume =  Math.round(((volume / days) * today ) * 100 ) / 100
+  daysMonth = new Date(new Date().getFullYear(), new Date().getDay(), 0).getDate()
+  hoursMonth = daysMonth * 24
+  hours = Math.abs( today * 24 ) - (24 - new Date().getHours())
+  initialVolume = Math.round(((volume / hoursMonth) * hours) * 100) / 100
   
   let webView = new WebView()
   await webView.loadHTML('<canvas id="c"></canvas>')
@@ -224,8 +226,12 @@ module.exports.getImageFor = async (fm, dir, name) => {
 //Create progress bar
 module.exports.createProgress = (type, volume, bgColor, fillColor, width, height, value, c1, c2) => {
   today = new Date().getDate() //current day of the month
-  days = new Date(new Date().getFullYear(), new Date().getDay(), 0).getDate()//Number of days in the current month
-  indicator = (volume / days) * today
+  daysMonth = new Date(new Date().getFullYear(), new Date().getDay(), 0).getDate()//Number of days in the current month
+  hoursMonth = daysMonth * 24
+  hours = Math.abs( today * 24 ) - (24 - new Date().getHours())
+  indicator = Math.round(((volume / hoursMonth) * hours) * 100) / 100
+  
+  log({today, daysMonth, hoursMonth, hours, indicator})
 
   //create context
   let context = new DrawContext()
